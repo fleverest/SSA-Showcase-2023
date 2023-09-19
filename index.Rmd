@@ -1,0 +1,496 @@
+---
+title: "Statistical election auditing"
+author: "Floyd Everest"
+format:
+  revealjs:
+    theme: [serif, custom.scss]
+---
+
+```{r}
+#| echo: false
+set.seed(1234)
+```
+
+## Elections
+
+. . .
+
+- Data collection
+  - Voters submit **ballots** $\{b_i\}_{i=1}^N$
+
+. . .
+
+- *"Social choice"*
+  - Choose the winner(s) among **candidates** $\mathcal{C}$
+  - Deterministic given $\{b_i\}$
+
+## Auditing
+
+- A potentially dubious outcome is reported
+  - Candidate $C \in \mathcal{C}$ reported to have won
+- **How can we verify this outcome?**
+
+::: {.notes}
+Following the election, an audit aims to uncover and correct any error.
+In short, a reported outcome is given and we want to prove or disprove this claim.
+:::
+
+
+## Idea 1
+
+::::: {.incremental}
+- Check every ballot cast in the election and re-count
+
+:::: {.columns}
+
+::: {.column width="50%"}
+- Pros:
+  - Guaranteed to correct invalid outcome
+  - Creates jobs
+:::
+
+::: {.column width="50%"}
+- Cons:
+  - Expensive
+  - Fellow statisticians out of work
+  - **Boring**
+:::
+
+::::
+:::::
+
+::: {.notes}
+The most straightforward way to audit an election is to simply re-count the ballots by hand until you can prove the outcome.
+
+While simplistic, this is the only way to correct an invalid outcome with 100% probability.
+In large elections this could take days, weeks, months: plenty of work to go around!
+
+This process would be extremely expensive for the electoral body
+If everyone did this, I'd have to find a new topic for my thesis
+There is a distinct lack of fun statistics tricks
+:::
+
+
+## Auditing (reprise)
+
+- A potentially dubious outcome is reported
+  - Candidate $C \in \mathcal{C}$ reported to have won
+
+::: {.fragment .highlight-red}
+- **How can we verify this outcome?**
+:::
+
+
+::: {.incremental}
+- **How can we verify this outcome *using statistics*?**
+  - **Efficient**
+    - Outcome supported $\rightarrow$ stop early!
+  - **Low Risk**
+    - Outcome not supported $\rightarrow$ proceed to full recount!
+:::
+
+::: {.notes}
+If the reported outcome is correct, we want our statistical audit to stop as early as possible:
+* Checking fewer ballots
+* Costing less time and money
+
+If the reported outcome is incorrect, we want our statistical audit to proceed to a full recount with high probability.
+:::
+
+## Idea 2
+
+- Construct a sequential hypothesis test
+  - Choose statistic(s) which evaluates how strongly the data supports the reported outcome
+  - Keep sampling until the statistic sufficiently supports the reported outcome
+  - Otherwise, conduct full recount
+
+. . .
+
+- Sample ballots at random
+  - Compute test statistic(s) at each step
+  - Stop *iff* we can reject the possibility of an **upset**
+
+::: {.notes}
+If the reported outcome is incorrect, we should proceed to a recount with high probability.
+An upset is the event the reported outcome was false
+:::
+
+## Visually
+
+* Candidates $\mathcal{C} = \{A, B, C\}$.
+* $A$ is reported to have won.
+
+```{r}
+library(Ternary)
+TernaryPlot(atip="A", btip="B", ctip="C", axis.labels = FALSE, axis.tick = FALSE)
+TernaryPolygon(list(c(1,0,0), c(1/2, 1/2, 0), c(1/3,1/3,1/3), c(1/2, 0, 1/2)), col = "#EEEEEE")
+TernaryPolygon(list(c(1/2,1/2,0), c(1/3, 1/3, 1/3), c(1/2,0,1/2), c(0, 0, 1), c(0, 1, 0)), col = "#AAAAAA")
+text(0, 0.5, expression("H"[1]), col = "black")
+text(0, 0.2, expression("H"[0]), col = "black")
+```
+
+::: {.notes}
+This is a ternary plot, which helps to visualise the ballot proportions in favour of three candidates.
+
+A single point on this plot corresponds to the proportion each of the three possible ballots takes in the election, sample, etc.
+
+The alternative corresponds to the case where A truly does receive a majority vote, and the null hypothesis corresponds to any other scenario where A does not win.
+:::
+
+## Visually
+
+* Candidates $\mathcal{C} = \{A, B, C\}$.
+* $A$ is reported to have won.
+
+```{r}
+TernaryPlot(atip="A", btip="B", ctip="C", axis.labels = FALSE, axis.tick = FALSE)
+TernaryPolygon(list(c(1,0,0), c(1/2, 1/2, 0), c(1/3,1/3,1/3), c(1/2, 0, 1/2)), col = "#EEEEEE")
+TernaryPolygon(list(c(1/2,1/2,0), c(0, 1, 0), c(0,1/2,1/2), c(1/3, 1/3, 1/3)), col = "#AAAAAA")
+TernaryPolygon(list(c(1/2,0,1/2), c(1/3, 1/3, 1/3), c(0,1/2,1/2), c(0, 0, 1)), col = "#AAAAAA")
+text(0, 0.5, expression("H"["1"]))
+text(-0.2, 0.2, expression("H"["0,1"]), col = "black")
+text(0.2, 0.2, expression("H"["0,2"]), col = "black")
+```
+
+::: {.notes}
+The null hypothesis here can be partitioned to a composite null, with each region corresponding to the two other potential outcomes of the election (B wins, C wins).
+:::
+
+## Formally...
+
+::: {.incremental}
+- Set-up:
+  - $\text{H}_0$: The reported outcome is false
+    - In many cases, $\text{H}_0$ is *composite*
+  - $\text{H}_1$: The reported outcome is true
+  - If we can reject $\text{H}_0$, the data supports the reported outcome
+
+- Sampling
+  - Model $\{b_i\}$ as realisations from IID $\{B_i\}$
+:::
+
+## Sampling error
+
+```{r}
+TernaryPlot(atip="A", btip="B", ctip="C", axis.labels = FALSE, axis.tick = FALSE)
+TernaryPolygon(list(c(1,0,0), c(1/2, 1/2, 0), c(1/3,1/3,1/3), c(1/2, 0, 1/2)), col = "#EEEEEE")
+TernaryPolygon(list(c(1/2,1/2,0), c(1/3, 1/3, 1/3), c(1/2,0,1/2), c(0, 0, 1), c(0, 1, 0)), col = "#AAAAAA")
+points <- list(
+  c(0.2, 0.3, 0.5)
+)
+TernaryPoints(head(points, -1), col = "black")
+TernaryPoints(tail(points, 1), col = "blue")
+```
+
+## Sampling error
+
+```{r}
+TernaryPlot(atip="A", btip="B", ctip="C", axis.labels = FALSE, axis.tick = FALSE)
+TernaryPolygon(list(c(1,0,0), c(1/2, 1/2, 0), c(1/3,1/3,1/3), c(1/2, 0, 1/2)), col = "#EEEEEE")
+TernaryPolygon(list(c(1/2,1/2,0), c(1/3, 1/3, 1/3), c(1/2,0,1/2), c(0, 0, 1), c(0, 1, 0)), col = "#AAAAAA")
+points <- list(
+  c(0.2, 0.3, 0.5),
+  c(0.3, 0.5, 0.2)
+)
+TernaryPoints(head(points, -1), col = "black")
+TernaryPoints(tail(points, 1), col = "blue")
+for (i in seq_along(head(points, -1))) {
+  TernaryArrows(points[i], points[i+1], length = 0.05, col = "black")
+}
+```
+
+
+## Sampling error
+
+```{r}
+TernaryPlot(atip="A", btip="B", ctip="C", axis.labels = FALSE, axis.tick = FALSE)
+TernaryPolygon(list(c(1,0,0), c(1/2, 1/2, 0), c(1/3,1/3,1/3), c(1/2, 0, 1/2)), col = "#EEEEEE")
+TernaryPolygon(list(c(1/2,1/2,0), c(1/3, 1/3, 1/3), c(1/2,0,1/2), c(0, 0, 1), c(0, 1, 0)), col = "#AAAAAA")
+points <- list(
+  c(0.2, 0.3, 0.5),
+  c(0.3, 0.5, 0.2),
+  c(0.45, 0.35, 0.2)
+)
+TernaryPoints(head(points, -1), col = "black")
+TernaryPoints(tail(points, 1), col = "blue")
+for (i in seq_along(head(points, -1))) {
+  TernaryArrows(points[i], points[i+1], length = 0.05, col = "black")
+}
+```
+
+## Sampling error
+
+```{r}
+TernaryPlot(atip="A", btip="B", ctip="C", axis.labels = FALSE, axis.tick = FALSE)
+TernaryPolygon(list(c(1,0,0), c(1/2, 1/2, 0), c(1/3,1/3,1/3), c(1/2, 0, 1/2)), col = "#EEEEEE")
+TernaryPolygon(list(c(1/2,1/2,0), c(1/3, 1/3, 1/3), c(1/2,0,1/2), c(0, 0, 1), c(0, 1, 0)), col = "#AAAAAA")
+points <- list(
+  c(0.2, 0.3, 0.5),
+  c(0.3, 0.5, 0.2),
+  c(0.45, 0.35, 0.2),
+  c(0.31, 0.31, 0.38)
+)
+TernaryPoints(head(points, -1), col = "black")
+TernaryPoints(tail(points, 1), col = "blue")
+for (i in seq_along(head(points, -1))) {
+  TernaryArrows(points[i], points[i+1], length = 0.05, col = "black")
+}
+```
+
+## Sampling error
+
+```{r}
+TernaryPlot(atip="A", btip="B", ctip="C", axis.labels = FALSE, axis.tick = FALSE)
+TernaryPolygon(list(c(1,0,0), c(1/2, 1/2, 0), c(1/3,1/3,1/3), c(1/2, 0, 1/2)), col = "#EEEEEE")
+TernaryPolygon(list(c(1/2,1/2,0), c(1/3, 1/3, 1/3), c(1/2,0,1/2), c(0, 0, 1), c(0, 1, 0)), col = "#AAAAAA")
+points <- list(
+  c(0.2, 0.3, 0.5),
+  c(0.3, 0.5, 0.2),
+  c(0.45, 0.35, 0.2),
+  c(0.31, 0.31, 0.38),
+  c(0.3, 0.37, 0.33)
+)
+TernaryPoints(head(points, -1), col = "black")
+TernaryPoints(tail(points, 1), col = "blue")
+for (i in seq_along(head(points, -1))) {
+  TernaryArrows(points[i], points[i+1], length = 0.05, col = "black")
+}
+```
+
+
+## Bayesian audits
+
+::: {.incremental}
+- Model ballots $\sim\ \text{Multinomial}(N, p)$
+
+- Choose a prior, e.g. $\pi_0: \text{Dirichlet}(\alpha_0)$
+
+- Given ballots $\{b_i\}_{i=1}^n$
+  - Calculate posterior $\pi_n: \text{Dirichlet-Multinomial}(N-n, alpha_n)$
+  - Use draws from $\pi_n$ to estimate posterior probability of $\text{H}_0$ directly
+:::
+
+## Posterior $\pi_n$
+
+```{r}
+library(extraDistr)
+alpha_n <- c(6, 4, 5)
+TernaryPlot(atip="A", btip="B", ctip="C", axis.labels = FALSE, axis.tick = FALSE)
+TernaryContour(function(p1, p2, p3) ddirichlet(cbind(p1, p2, p3), alpha=alpha_n), resolution = 100L, filled = TRUE)
+TernaryLines(list(c(0.5, 0.5, 0), c(1/3, 1/3, 1/3), c(0.5, 0, 0.5)), col="orange", lwd=3)
+```
+
+## Monte-carlo integration
+
+```{r}
+par(mfrow = c(1,2))
+alpha_n <- c(6, 4, 5)
+N <- 1000
+TernaryPlot(atip="A", btip="B", ctip="C", axis.labels = FALSE, axis.tick = FALSE)
+TernaryPolygon(list(c(1,0,0), c(1/2, 1/2, 0), c(1/3,1/3,1/3), c(1/2, 0, 1/2)), col = "#EEEEEE")
+TernaryPolygon(list(c(1/2,1/2,0), c(1/3, 1/3, 1/3), c(1/2,0,1/2), c(0, 0, 1), c(0, 1, 0)), col = "#AAAAAA")
+pts <- rdirichlet(N, alpha = alpha_n)
+TernaryPoints(pts, col = "blue", pch = ".")
+text(0, 0.7, expression("H"[1]), col = "black")
+text(0, 0.1, expression("H"[0]), col = "black")
+
+tab <- table(pts[,1] > 1/3)/N
+names(tab) <- c("Post. P(H0)", "Post. P(H1)")
+barplot(tab)
+```
+
+::: {.notes}
+Using the model, we take draws from the posterior and we can count how many simulations support the null, how many support the alternative.
+Then, we can derive posterior probabilities for the null and alternative and stop auditing when we are satisfied.
+:::
+
+
+## Different elections
+
+- Bayesian audit supports a variety of elections easily:
+- Given a model:
+  - Simulate outcome
+  - Does it support $\text{H}_1$?
+  - Repeat
+
+::: {.notes}
+This works for any social choice function, even IRV!
+:::
+
+## Shortcomings
+
+- No straightforward way to control the **Risk** (Type I error)
+  - The probability of rejecting $\text{H}_0$, even though it is true
+  - Can estimate for some contests by studying worst-case scenarios
+
+# Example in `R`: Wakehurst 2023
+
+## The data
+
+- March 2023: NSW holds election for Legislative Assembly
+- Six candidates in the running for Wakehurst district:
+  - WRIGHT Sue (ALP)
+  - MAWSON Greg (SAP)
+  - SORENSEN Susan (AJP)
+  - HRNJAK Ethan (GRN)
+  - WILLIAMS Toby (LIB)
+  - REGAN Michael (IND)
+
+
+## Results
+
+Michael Regan (IND) beats Toby Williams (LIB) on preferences!
+
+![Wakehurst 2023 Distribution of Preferences](./wakehurst-dop.png)
+
+## Preparing the data
+
+Download election data from [PrefLib](https://www.preflib.org/) using `prefio`:
+```{r}
+#| echo: true
+#| code-line-numbers: "1|2,3"
+library(prefio) # My R package for working with preferential datasets
+wakehurst <- read_preflib("nswla/00058-00000273.soi", from_preflib = TRUE)
+head(wakehurst)
+```
+
+. . .
+
+Shuffle the data to simulate an audit:
+```{r}
+#| echo: true
+ballots <- sample(as.preferences(wakehurst))
+```
+
+## Conducting an audit
+
+Specify a prior:
+```{r}
+#| echo: true
+#| code-line-numbers: "1|3,4,5,6"
+library(elections.dtree) # My R package implementing Bayesian audits for IRV
+
+pi <- dirichlet_tree$new(
+  candidates = names(ballots),
+  a0 = 1. # "Uniform" prior
+)
+```
+
+## Prior probabilities for $\text{H}_{0,i},\ \text{H}_1$
+
+```{r}
+#| echo: true
+#| code-line-numbers: "2|3|4|"
+prob_post <- pi$sample_posterior(
+  n_elections = 10000,         # Number of monte-carlo draws from the posterior
+  n_ballots = length(ballots), # Number of ballots cast in election
+  n_threads = 4                # Specify number of threads to use
+)
+
+barplot(prob_post, xlab = "Candidate", ylab= "Posterior probability of winning",  cex.names=.7)
+```
+Uniform!
+
+## Observe a small batch of ballots
+
+```{r}
+#| echo: true
+#| code-line-numbers: "1|3,4,5,6,7|"
+pi$update(ballots[1:10])
+
+prob_post <- pi$sample_posterior(
+  n_elections = 10000,         # Number of monte-carlo draws from the posterior
+  n_ballots = length(ballots), # Number of ballots cast in election
+  n_threads = 4                # Specify number of threads to use
+)
+
+barplot(prob_post, xlab = "Candidate", ylab= "Posterior probability of winning",  cex.names=.7)
+```
+
+## and another...
+
+```{r}
+#| echo: true
+#| code-line-numbers: "1|3,4,5,6,7|"
+pi$update(ballots[11:20])
+
+prob_post <- pi$sample_posterior(
+  n_elections = 10000,         # Number of monte-carlo draws from the posterior
+  n_ballots = length(ballots), # Number of ballots cast in election
+  n_threads = 4                # Specify number of threads to use
+)
+
+barplot(prob_post, xlab = "Candidate", ylab= "Posterior probability of winning",  cex.names=.7)
+```
+
+##
+
+```{r}
+#| echo: false
+batcher_factory <- function() {
+  batch_size <- 100
+  i <- 0
+  function() {
+    bs <- ballots[(batch_size * i + 1):(batch_size*(i+1))]
+    i <<- i + 1
+    return(bs)
+  }
+}
+batch <- batcher_factory()
+
+pi$update(batch())
+prob_post <- pi$sample_posterior(
+  n_elections = 10000,         # Number of monte-carlo draws from the posterior
+  n_ballots = length(ballots), # Number of ballots cast in election
+  n_threads = 4                # Specify number of threads to use
+)
+barplot(prob_post, xlab = "Candidate", ylab= "Posterior probability of winning",  cex.names=.7)
+```
+
+## ...
+
+```{r}
+#| echo: false
+pi$update(batch())
+prob_post <- pi$sample_posterior(
+  n_elections = 10000,         # Number of monte-carlo draws from the posterior
+  n_ballots = length(ballots), # Number of ballots cast in election
+  n_threads = 4                # Specify number of threads to use
+)
+barplot(prob_post, xlab = "Candidate", ylab= "Posterior probability of winning",  cex.names=.7)
+```
+
+## ...
+
+```{r}
+#| echo: false
+pi$update(batch())
+prob_post <- pi$sample_posterior(
+  n_elections = 10000,         # Number of monte-carlo draws from the posterior
+  n_ballots = length(ballots), # Number of ballots cast in election
+  n_threads = 4                # Specify number of threads to use
+)
+barplot(prob_post, xlab = "Candidate", ylab= "Posterior probability of winning",  cex.names=.7)
+```
+
+## ...
+
+```{r}
+#| echo: false
+pi$update(batch())
+prob_post <- pi$sample_posterior(
+  n_elections = 10000,         # Number of monte-carlo draws from the posterior
+  n_ballots = length(ballots), # Number of ballots cast in election
+  n_threads = 4                # Specify number of threads to use
+)
+barplot(prob_post, xlab = "Candidate", ylab= "Posterior probability of winning",  cex.names=.7)
+```
+
+## Tracing the probabilities over time
+
+```{r}
+#| echo: false
+library(ggplot2)
+ps_post <- read.csv("wakehurst_audit.csv")
+ggplot(ps_post) + geom_line(aes(color=Candidate, x=Observations, y=Posterior)) + xlim(0, 2000)
+```
