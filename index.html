@@ -402,11 +402,47 @@ Floyd Everest
 </div>
 
 </section>
-<section id="acknowledgements" class="title-slide slide level1 center">
-<h1>Acknowledgements</h1>
-
+<section id="my-career-so-far" class="slide level2">
+<h2>My career so far</h2>
+<p>Slides: <a href="https://fleverest.github.io/SSA-Showcase-2023">fleverest.github.io/SSA-Showcase-2023</a></p>
+<ul>
+<li>GD/MSc Data Science @ University of Melbourne
+<ul>
+<li>Bayesian election auditing</li>
+<li><code>elections.dtree</code></li>
+<li>Presented at E-Vote-ID, ESORICS 2022</li>
+</ul></li>
+</ul>
+<div class="fragment">
+<ul>
+<li>Research Assistant / Software Developer
+<ul>
+<li><code>prefio</code></li>
+</ul></li>
+</ul>
+</div>
+<div class="fragment">
+<ul>
+<li>PhD student @ Monash University</li>
+</ul>
+<aside class="notes">
+<p>URL for slides</p>
+<p>Not far into my academic career, I had a fruitful start: During my masters research (on bayesian election auditing) at unimelb I had the opportunity to publish work and present at two international conferences, one even in person at austria. I also had the opportunity to develop open source software and publish my first R package on CRAN (elections.dtree).</p>
+<p>Then, I worked for a year as a research assistant (where I published a second package <code>prefio</code> to CRAN) and a software developer.</p>
+<p>Now, I’ve just started my PhD at Monash university. I’m still quite early on in my academic journey, but I hope it continues to be as eventful as it has been so far</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</div>
 </section>
-
 <section>
 <section id="election-auditing" class="title-slide slide level1 center">
 <h1>Election Auditing</h1>
@@ -421,8 +457,7 @@ Floyd Everest
 </ul></li>
 <li><em>“Social choice”</em>
 <ul>
-<li>Choose the winner(s) among <strong>candidates</strong> <span class="math inline">\(\mathcal{C}\)</span></li>
-<li>Deterministic given <span class="math inline">\(\{b_i\}\)</span></li>
+<li>Calculate the winner(s) among <strong>candidates</strong> <span class="math inline">\(\mathcal{C}\)</span></li>
 </ul></li>
 </ul>
 </section>
@@ -451,16 +486,16 @@ Floyd Everest
 </section>
 <section id="idea-1" class="slide level2">
 <h2>Idea 1</h2>
-<div>
 <ul>
-<li class="fragment">Check every ballot cast in the election and re-count</li>
+<li>Check every ballot cast in the election and re-count</li>
 </ul>
+<div>
 <div class="columns">
 <div class="column" style="width:50%;">
 <ul>
 <li class="fragment">Pros:
 <ul>
-<li class="fragment">Guaranteed to correct invalid outcome</li>
+<li class="fragment">Guaranteed to correct errors</li>
 <li class="fragment">Creates jobs</li>
 </ul></li>
 </ul>
@@ -478,8 +513,11 @@ Floyd Everest
 </div>
 <aside class="notes">
 <p>The most straightforward way to audit an election is to simply re-count the ballots by hand until you can prove the outcome.</p>
-<p>While simplistic, this is the only way to correct an invalid outcome with 100% probability. In large elections this could take days, weeks, months: plenty of work to go around!</p>
-<p>This process would be extremely expensive for the electoral body If everyone did this, I’d have to find a new topic for my thesis There is a distinct lack of fun statistics tricks</p>
+<p>While simplistic, this is the only way to correct an incorrect reported outcome with 100% probability.</p>
+<p>This would create many jobs as the electoral body would need many counters.</p>
+<p>But of course it would be extremely expensive</p>
+<p>If everyone did this, I’d have to find a new topic for my PhD thesis</p>
+<p>The most important reason not to do this: it’s pretty boring, and there is a distinct lack of fun statistics tricks</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -545,61 +583,8 @@ Floyd Everest
 <li>Otherwise, conduct full recount</li>
 </ul></li>
 </ul>
-<div class="fragment">
-<ul>
-<li>Sample ballots at random
-<ul>
-<li>Compute test statistic(s) at each step</li>
-<li>Stop when/if the statistic passes some threshold</li>
-</ul></li>
-</ul>
 <aside class="notes">
-<p>If the reported outcome is incorrect, we should proceed to a recount with high probability. An upset is the event the reported outcome was false</p>
-<style type="text/css">
-        span.MJX_Assistive_MathML {
-          position:absolute!important;
-          clip: rect(1px, 1px, 1px, 1px);
-          padding: 1px 0 0 0!important;
-          border: 0!important;
-          height: 1px!important;
-          width: 1px!important;
-          overflow: hidden!important;
-          display:block!important;
-      }</style></aside>
-</div>
-</section>
-<section id="visually" class="slide level2">
-<h2>Visually</h2>
-<ul>
-<li>Candidates <span class="math inline">\(\mathcal{C} = \{A, B, C\}\)</span>.</li>
-<li><span class="math inline">\(A\)</span> is reported to have won.</li>
-</ul>
-
-<img data-src="index_files/figure-revealjs/unnamed-chunk-2-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-1" width="960" class="r-stretch quarto-figure-center"><aside class="notes">
-<p>This is a ternary plot, which helps to visualise the ballot proportions in favour of three candidates.</p>
-<p>A single point on this plot corresponds to the proportion each of the three possible ballots takes in the election, sample, etc.</p>
-<p>The alternative corresponds to the case where A truly does receive a majority vote, and the null hypothesis corresponds to any other scenario where A does not win.</p>
-<style type="text/css">
-        span.MJX_Assistive_MathML {
-          position:absolute!important;
-          clip: rect(1px, 1px, 1px, 1px);
-          padding: 1px 0 0 0!important;
-          border: 0!important;
-          height: 1px!important;
-          width: 1px!important;
-          overflow: hidden!important;
-          display:block!important;
-      }</style></aside>
-</section>
-<section id="visually-1" class="slide level2">
-<h2>Visually</h2>
-<ul>
-<li>Candidates <span class="math inline">\(\mathcal{C} = \{A, B, C\}\)</span>.</li>
-<li><span class="math inline">\(A\)</span> is reported to have won.</li>
-</ul>
-
-<img data-src="index_files/figure-revealjs/unnamed-chunk-3-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-2" width="960" class="r-stretch quarto-figure-center"><aside class="notes">
-<p>The null hypothesis here can be partitioned to a composite null, with each region corresponding to the two other potential outcomes of the election (B wins, C wins).</p>
+<p>If the reported outcome is incorrect, we will need to proceed to a full recount anyway.</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -614,20 +599,19 @@ Floyd Everest
 </section>
 <section id="formally" class="slide level2">
 <h2>Formally…</h2>
-<div>
 <ul>
-<li class="fragment">Set-up:
+<li>Set-up:
 <ul>
-<li class="fragment"><span class="math inline">\(\text{H}_0\)</span>: The reported outcome is false
-<ul>
-<li class="fragment">In many cases, <span class="math inline">\(\text{H}_0\)</span> is <em>composite</em></li>
+<li><span class="math inline">\(\text{H}_0\)</span>: The reported outcome is false (<span class="math inline">\(A\)</span> doesn’t win)</li>
+<li><span class="math inline">\(\text{H}_1\)</span>: The reported outcome is true (<span class="math inline">\(A\)</span> does indeed win)</li>
 </ul></li>
-<li class="fragment"><span class="math inline">\(\text{H}_1\)</span>: The reported outcome is true</li>
-</ul></li>
-<li class="fragment">Procedure
+</ul>
+<div class="fragment">
 <ul>
-<li class="fragment">Model <span class="math inline">\(\{b_i\}\)</span> as realisations from IID <span class="math inline">\(\{B_i\}\)</span></li>
-<li class="fragment">Compute statistic based on the random sample seen so far</li>
+<li>Procedure
+<ul>
+<li>Sample ballots at random</li>
+<li>Compute statistic based on what we’ve seen so far</li>
 </ul></li>
 </ul>
 </div>
@@ -635,45 +619,39 @@ Floyd Everest
 <section id="sample-proportions" class="slide level2">
 <h2>Sample proportions</h2>
 
-<img data-src="index_files/figure-revealjs/unnamed-chunk-4-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-3" width="960" class="r-stretch quarto-figure-center"></section>
+<img data-src="index_files/figure-revealjs/unnamed-chunk-2-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-1" width="960" class="r-stretch quarto-figure-center"></section>
 <section id="sample-proportions-1" class="slide level2">
 <h2>Sample proportions</h2>
 
-<img data-src="index_files/figure-revealjs/unnamed-chunk-5-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-4" width="960" class="r-stretch quarto-figure-center"></section>
+<img data-src="index_files/figure-revealjs/unnamed-chunk-3-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-2" width="960" class="r-stretch quarto-figure-center"></section>
 <section id="sample-proportions-2" class="slide level2">
 <h2>Sample proportions</h2>
 
-<img data-src="index_files/figure-revealjs/unnamed-chunk-6-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-5" width="960" class="r-stretch quarto-figure-center"></section>
+<img data-src="index_files/figure-revealjs/unnamed-chunk-4-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-3" width="960" class="r-stretch quarto-figure-center"></section>
 <section id="sample-proportions-3" class="slide level2">
 <h2>Sample proportions</h2>
 
-<img data-src="index_files/figure-revealjs/unnamed-chunk-7-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-6" width="960" class="r-stretch quarto-figure-center"></section>
+<img data-src="index_files/figure-revealjs/unnamed-chunk-5-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-4" width="960" class="r-stretch quarto-figure-center"></section>
 <section id="sample-proportions-4" class="slide level2">
 <h2>Sample proportions</h2>
 
-<img data-src="index_files/figure-revealjs/unnamed-chunk-8-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-7" width="960" class="r-stretch quarto-figure-center"></section>
+<img data-src="index_files/figure-revealjs/unnamed-chunk-6-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-5" width="960" class="r-stretch quarto-figure-center"></section>
 <section id="bayesian-audits" class="slide level2">
 <h2>Bayesian audits</h2>
-<div>
 <ul>
-<li class="fragment"><p>Model ballots <span class="math inline">\(\sim\ \text{Multinomial}(N, p)\)</span></p></li>
-<li class="fragment"><p>Choose a prior, e.g.&nbsp;<span class="math inline">\(\pi_0: \text{Dirichlet}(\alpha_0)\)</span></p></li>
-<li class="fragment"><p>Given ballots <span class="math inline">\(\{b_i\}_{i=1}^n\)</span></p>
-<ul>
-<li class="fragment">Calculate posterior <span class="math inline">\(\pi_n: \text{Dirichlet-Multinomial}(N-n, alpha_n)\)</span></li>
-<li class="fragment">Use draws from <span class="math inline">\(\pi_n\)</span> to estimate posterior probability of <span class="math inline">\(\text{H}_0\)</span> directly</li>
-</ul></li>
+<li>Use Bayesian statistics to quantify current uncertainty</li>
+<li>Calculate posterior <span class="math inline">\(\pi_n\)</span> using current sample</li>
+<li>Use <span class="math inline">\(\pi_n\)</span> to find posterior probability of <span class="math inline">\(\text{H}_1\)</span> directly!</li>
 </ul>
-</div>
 </section>
 <section id="posterior-pi_n" class="slide level2">
 <h2>Posterior <span class="math inline">\(\pi_n\)</span></h2>
 
-<img data-src="index_files/figure-revealjs/unnamed-chunk-9-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-8" width="960" class="r-stretch quarto-figure-center"></section>
+<img data-src="index_files/figure-revealjs/unnamed-chunk-7-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-6" width="960" class="r-stretch quarto-figure-center"></section>
 <section id="monte-carlo-integration" class="slide level2">
 <h2>Monte-carlo integration</h2>
 
-<img data-src="index_files/figure-revealjs/unnamed-chunk-10-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-9" width="960" class="r-stretch quarto-figure-center"><aside class="notes">
+<img data-src="index_files/figure-revealjs/unnamed-chunk-8-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-7" width="960" class="r-stretch quarto-figure-center"><aside class="notes">
 <p>Using the model, we take draws from the posterior and we can count how many simulations support the null, how many support the alternative. Then, we can derive posterior probabilities for the null and alternative and stop auditing when we are satisfied.</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
@@ -795,7 +773,7 @@ Floyd Everest
 <span id="cb5-7"><a href="#cb5-7"></a><span class="fu">barplot</span>(prob_post, <span class="at">xlab =</span> <span class="st">"Candidate"</span>, <span class="at">ylab=</span> <span class="st">"Posterior probability of winning"</span>,  <span class="at">cex.names=</span>.<span class="dv">7</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
-<img data-src="index_files/figure-revealjs/unnamed-chunk-14-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-10" width="960" class="r-stretch quarto-figure-center"><p>Uniform!</p>
+<img data-src="index_files/figure-revealjs/unnamed-chunk-12-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-8" width="960" class="r-stretch quarto-figure-center"><p>Uniform!</p>
 </section>
 <section id="observe-a-small-batch-of-ballots" class="slide level2">
 <h2>Observe a small batch of ballots</h2>
@@ -811,7 +789,7 @@ Floyd Everest
 <span id="cb6-9"><a href="#cb6-9"></a><span class="fu">barplot</span>(prob_post, <span class="at">xlab =</span> <span class="st">"Candidate"</span>, <span class="at">ylab=</span> <span class="st">"Posterior probability of winning"</span>,  <span class="at">cex.names=</span>.<span class="dv">7</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
-<img data-src="index_files/figure-revealjs/unnamed-chunk-15-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-11" width="960" class="r-stretch quarto-figure-center"></section>
+<img data-src="index_files/figure-revealjs/unnamed-chunk-13-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-9" width="960" class="r-stretch quarto-figure-center"></section>
 <section id="and-another" class="slide level2">
 <h2>and another…</h2>
 <div class="cell">
@@ -826,27 +804,27 @@ Floyd Everest
 <span id="cb7-9"><a href="#cb7-9"></a><span class="fu">barplot</span>(prob_post, <span class="at">xlab =</span> <span class="st">"Candidate"</span>, <span class="at">ylab=</span> <span class="st">"Posterior probability of winning"</span>,  <span class="at">cex.names=</span>.<span class="dv">7</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
-<img data-src="index_files/figure-revealjs/unnamed-chunk-16-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-12" width="960" class="r-stretch quarto-figure-center"></section>
+<img data-src="index_files/figure-revealjs/unnamed-chunk-14-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-10" width="960" class="r-stretch quarto-figure-center"></section>
 <section id="section" class="slide level2">
 <h2></h2>
 
-<img data-src="index_files/figure-revealjs/unnamed-chunk-17-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-13" width="960" class="r-stretch quarto-figure-center"></section>
+<img data-src="index_files/figure-revealjs/unnamed-chunk-15-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-11" width="960" class="r-stretch quarto-figure-center"></section>
 <section id="section-1" class="slide level2">
 <h2></h2>
 
-<img data-src="index_files/figure-revealjs/unnamed-chunk-18-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-14" width="960" class="r-stretch quarto-figure-center"></section>
+<img data-src="index_files/figure-revealjs/unnamed-chunk-16-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-12" width="960" class="r-stretch quarto-figure-center"></section>
 <section id="section-2" class="slide level2">
 <h2></h2>
 
-<img data-src="index_files/figure-revealjs/unnamed-chunk-19-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-15" width="960" class="r-stretch quarto-figure-center"></section>
+<img data-src="index_files/figure-revealjs/unnamed-chunk-17-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-13" width="960" class="r-stretch quarto-figure-center"></section>
 <section id="section-3" class="slide level2">
 <h2></h2>
 
-<img data-src="index_files/figure-revealjs/unnamed-chunk-20-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-16" width="960" class="r-stretch quarto-figure-center"></section>
+<img data-src="index_files/figure-revealjs/unnamed-chunk-18-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-14" width="960" class="r-stretch quarto-figure-center"></section>
 <section id="tracing-the-probabilities-over-time" class="slide level2">
 <h2>Tracing the probabilities over time</h2>
 
-<img data-src="index_files/figure-revealjs/unnamed-chunk-21-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-17" width="960" class="r-stretch quarto-figure-center"></section></section>
+<img data-src="index_files/figure-revealjs/unnamed-chunk-19-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-15" width="960" class="r-stretch quarto-figure-center"></section></section>
 <section>
 <section id="questions" class="title-slide slide level1 center">
 <h1>Questions</h1>
@@ -854,6 +832,7 @@ Floyd Everest
 </section>
 <section id="references" class="slide level2 smaller">
 <h2>References</h2>
+<p>Slides: <a href="https://fleverest.github.io/SSA-Showcase-2023">fleverest.github.io/SSA-Showcase-2023</a></p>
 <ul>
 <li><a href="https://doi.org/10.5281/zenodo.5960048">Quarto</a>. Allaire, J. J., Charles Teague, Carlos Scheidegger, Yihui Xie, and Christophe Dervieux. 2022.</li>
 <li><a href="https://www.usenix.org/system/files/conference/evtwote12/rivest_bayes_rev_073112.pdf">A Bayesian Method for Auditing Elections</a>. Emily Shen, and Ronald L. Rivest. 2012.</li>

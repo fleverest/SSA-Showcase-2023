@@ -11,8 +11,33 @@ format:
 set.seed(1234)
 ```
 
-# Acknowledgements
+## My career so far
 
+Slides: [fleverest.github.io/SSA-Showcase-2023](https://fleverest.github.io/SSA-Showcase-2023)
+
+- GD/MSc Data Science @ University of Melbourne
+  - Bayesian election auditing
+  - `elections.dtree`
+  - Presented at E-Vote-ID, ESORICS 2022
+
+. . .
+
+- Research Assistant / Software Developer
+  - `prefio`
+
+. . .
+
+- PhD student @ Monash University
+
+::: {.notes}
+URL for slides
+
+Not far into my academic career, I had a fruitful start: During my masters research (on bayesian election auditing) at unimelb I had the opportunity to publish work and present at two international conferences, one even in person at austria. I also had the opportunity to develop open source software and publish my first R package on CRAN (elections.dtree).
+
+Then, I worked for a year as a research assistant (where I published a second package `prefio` to CRAN) and a software developer.
+
+Now, I've just started my PhD at Monash university. I'm still quite early on in my academic journey, but I hope it continues to be as eventful as it has been so far
+:::
 
 # Election Auditing
 
@@ -22,8 +47,7 @@ set.seed(1234)
   - Voters submit **ballots** $\{b_i\}_{i=1}^N$
 
 - *"Social choice"*
-  - Choose the winner(s) among **candidates** $\mathcal{C}$
-  - Deterministic given $\{b_i\}$
+  - Calculate the winner(s) among **candidates** $\mathcal{C}$
 
 ## Auditing
 
@@ -39,14 +63,14 @@ In short, a reported outcome is given and we want to prove or disprove this clai
 
 ## Idea 1
 
-::::: {.incremental}
 - Check every ballot cast in the election and re-count
 
+::::: {.incremental}
 :::: {.columns}
 
 ::: {.column width="50%"}
 - Pros:
-  - Guaranteed to correct invalid outcome
+  - Guaranteed to correct errors
   - Creates jobs
 :::
 
@@ -63,12 +87,16 @@ In short, a reported outcome is given and we want to prove or disprove this clai
 ::: {.notes}
 The most straightforward way to audit an election is to simply re-count the ballots by hand until you can prove the outcome.
 
-While simplistic, this is the only way to correct an invalid outcome with 100% probability.
-In large elections this could take days, weeks, months: plenty of work to go around!
+While simplistic, this is the only way to correct an incorrect reported outcome with 100% probability.
 
-This process would be extremely expensive for the electoral body
-If everyone did this, I'd have to find a new topic for my thesis
-There is a distinct lack of fun statistics tricks
+This would create many jobs as the electoral body would need many counters.
+
+But of course it would be extremely expensive
+
+If everyone did this, I'd have to find a new topic for my PhD thesis
+
+The most important reason not to do this:
+it's pretty boring, and there is a distinct lack of fun statistics tricks
 :::
 
 
@@ -105,74 +133,27 @@ If the reported outcome is incorrect, we want our statistical audit to proceed t
   - Keep sampling until the statistic sufficiently supports the reported outcome
   - Otherwise, conduct full recount
 
-. . .
-
-- Sample ballots at random
-  - Compute test statistic(s) at each step
-  - Stop when/if the statistic passes some threshold
-
 ::: {.notes}
-If the reported outcome is incorrect, we should proceed to a recount with high probability.
-An upset is the event the reported outcome was false
+If the reported outcome is incorrect, we will need to proceed to a full recount anyway.
 :::
 
-## Visually
-
-* Candidates $\mathcal{C} = \{A, B, C\}$.
-* $A$ is reported to have won.
-
-```{r}
-library(Ternary)
-TernaryPlot(atip="A", btip="B", ctip="C", axis.labels = FALSE, axis.tick = FALSE)
-TernaryPolygon(list(c(1,0,0), c(1/2, 1/2, 0), c(1/3,1/3,1/3), c(1/2, 0, 1/2)), col = "#EEEEEE")
-TernaryPolygon(list(c(1/2,1/2,0), c(1/3, 1/3, 1/3), c(1/2,0,1/2), c(0, 0, 1), c(0, 1, 0)), col = "#AAAAAA")
-text(0, 0.5, expression("H"[1]), col = "black")
-text(0, 0.2, expression("H"[0]), col = "black")
-```
-
-::: {.notes}
-This is a ternary plot, which helps to visualise the ballot proportions in favour of three candidates.
-
-A single point on this plot corresponds to the proportion each of the three possible ballots takes in the election, sample, etc.
-
-The alternative corresponds to the case where A truly does receive a majority vote, and the null hypothesis corresponds to any other scenario where A does not win.
-:::
-
-## Visually
-
-* Candidates $\mathcal{C} = \{A, B, C\}$.
-* $A$ is reported to have won.
-
-```{r}
-TernaryPlot(atip="A", btip="B", ctip="C", axis.labels = FALSE, axis.tick = FALSE)
-TernaryPolygon(list(c(1,0,0), c(1/2, 1/2, 0), c(1/3,1/3,1/3), c(1/2, 0, 1/2)), col = "#EEEEEE")
-TernaryPolygon(list(c(1/2,1/2,0), c(0, 1, 0), c(0,1/2,1/2), c(1/3, 1/3, 1/3)), col = "#AAAAAA")
-TernaryPolygon(list(c(1/2,0,1/2), c(1/3, 1/3, 1/3), c(0,1/2,1/2), c(0, 0, 1)), col = "#AAAAAA")
-text(0, 0.5, expression("H"["1"]))
-text(-0.2, 0.2, expression("H"["0,1"]), col = "black")
-text(0.2, 0.2, expression("H"["0,2"]), col = "black")
-```
-
-::: {.notes}
-The null hypothesis here can be partitioned to a composite null, with each region corresponding to the two other potential outcomes of the election (B wins, C wins).
-:::
 
 ## Formally...
 
-::: {.incremental}
 - Set-up:
-  - $\text{H}_0$: The reported outcome is false
-    - In many cases, $\text{H}_0$ is *composite*
-  - $\text{H}_1$: The reported outcome is true
+  - $\text{H}_0$: The reported outcome is false ($A$ doesn't win)
+  - $\text{H}_1$: The reported outcome is true ($A$ does indeed win)
+
+. . .
 
 - Procedure
-  - Model $\{b_i\}$ as realisations from IID $\{B_i\}$
-  - Compute statistic based on the random sample seen so far
-:::
+  - Sample ballots at random
+  - Compute statistic based on what we've seen so far
 
 ## Sample proportions
 
 ```{r}
+require(Ternary)
 TernaryPlot(atip="A", btip="B", ctip="C", axis.labels = FALSE, axis.tick = FALSE)
 TernaryPolygon(list(c(1,0,0), c(1/2, 1/2, 0), c(1/3,1/3,1/3), c(1/2, 0, 1/2)), col = "#EEEEEE")
 TernaryPolygon(list(c(1/2,1/2,0), c(1/3, 1/3, 1/3), c(1/2,0,1/2), c(0, 0, 1), c(0, 1, 0)), col = "#AAAAAA")
@@ -261,15 +242,10 @@ for (i in seq_along(head(points, -1))) {
 
 ## Bayesian audits
 
-::: {.incremental}
-- Model ballots $\sim\ \text{Multinomial}(N, p)$
+- Use Bayesian statistics to quantify current uncertainty
+- Calculate posterior $\pi_n$ using current sample
+- Use $\pi_n$ to find posterior probability of $\text{H}_1$ directly!
 
-- Choose a prior, e.g. $\pi_0: \text{Dirichlet}(\alpha_0)$
-
-- Given ballots $\{b_i\}_{i=1}^n$
-  - Calculate posterior $\pi_n: \text{Dirichlet-Multinomial}(N-n, alpha_n)$
-  - Use draws from $\pi_n$ to estimate posterior probability of $\text{H}_0$ directly
-:::
 
 ## Posterior $\pi_n$
 
@@ -499,6 +475,8 @@ ggplot(ps_post) + geom_line(aes(color=Candidate, x=Observations, y=Posterior)) +
 # Questions
 
 ## References {.smaller}
+
+Slides: [fleverest.github.io/SSA-Showcase-2023](https://fleverest.github.io/SSA-Showcase-2023)
 
 - [Quarto](https://doi.org/10.5281/zenodo.5960048). Allaire, J. J., Charles Teague, Carlos Scheidegger, Yihui Xie, and Christophe Dervieux. 2022.
 - [A Bayesian Method for Auditing Elections](https://www.usenix.org/system/files/conference/evtwote12/rivest_bayes_rev_073112.pdf). Emily Shen, and Ronald L. Rivest. 2012.
