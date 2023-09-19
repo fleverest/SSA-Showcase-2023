@@ -11,14 +11,15 @@ format:
 set.seed(1234)
 ```
 
-## Elections
+# Acknowledgements
 
-. . .
+
+# Election Auditing
+
+## Two steps
 
 - Data collection
   - Voters submit **ballots** $\{b_i\}_{i=1}^N$
-
-. . .
 
 - *"Social choice"*
   - Choose the winner(s) among **candidates** $\mathcal{C}$
@@ -84,9 +85,9 @@ There is a distinct lack of fun statistics tricks
 ::: {.incremental}
 - **How can we verify this outcome *using statistics*?**
   - **Efficient**
-    - Outcome supported $\rightarrow$ stop early!
+    - Outcome supported $\rightarrow$ stop early w.h.p!
   - **Low Risk**
-    - Outcome not supported $\rightarrow$ proceed to full recount!
+    - Outcome incorrect $\rightarrow$ proceed to full recount w.h.p!
 :::
 
 ::: {.notes}
@@ -108,7 +109,7 @@ If the reported outcome is incorrect, we want our statistical audit to proceed t
 
 - Sample ballots at random
   - Compute test statistic(s) at each step
-  - Stop *iff* we can reject the possibility of an **upset**
+  - Stop when/if the statistic passes some threshold
 
 ::: {.notes}
 If the reported outcome is incorrect, we should proceed to a recount with high probability.
@@ -163,13 +164,13 @@ The null hypothesis here can be partitioned to a composite null, with each regio
   - $\text{H}_0$: The reported outcome is false
     - In many cases, $\text{H}_0$ is *composite*
   - $\text{H}_1$: The reported outcome is true
-  - If we can reject $\text{H}_0$, the data supports the reported outcome
 
-- Sampling
+- Procedure
   - Model $\{b_i\}$ as realisations from IID $\{B_i\}$
+  - Compute statistic based on the random sample seen so far
 :::
 
-## Sampling error
+## Sample proportions
 
 ```{r}
 TernaryPlot(atip="A", btip="B", ctip="C", axis.labels = FALSE, axis.tick = FALSE)
@@ -182,7 +183,7 @@ TernaryPoints(head(points, -1), col = "black")
 TernaryPoints(tail(points, 1), col = "blue")
 ```
 
-## Sampling error
+## Sample proportions
 
 ```{r}
 TernaryPlot(atip="A", btip="B", ctip="C", axis.labels = FALSE, axis.tick = FALSE)
@@ -200,7 +201,7 @@ for (i in seq_along(head(points, -1))) {
 ```
 
 
-## Sampling error
+## Sample proportions
 
 ```{r}
 TernaryPlot(atip="A", btip="B", ctip="C", axis.labels = FALSE, axis.tick = FALSE)
@@ -218,7 +219,7 @@ for (i in seq_along(head(points, -1))) {
 }
 ```
 
-## Sampling error
+## Sample proportions
 
 ```{r}
 TernaryPlot(atip="A", btip="B", ctip="C", axis.labels = FALSE, axis.tick = FALSE)
@@ -237,7 +238,7 @@ for (i in seq_along(head(points, -1))) {
 }
 ```
 
-## Sampling error
+## Sample proportions
 
 ```{r}
 TernaryPlot(atip="A", btip="B", ctip="C", axis.labels = FALSE, axis.tick = FALSE)
@@ -447,7 +448,7 @@ prob_post <- pi$sample_posterior(
 barplot(prob_post, xlab = "Candidate", ylab= "Posterior probability of winning",  cex.names=.7)
 ```
 
-## ...
+##
 
 ```{r}
 #| echo: false
@@ -460,7 +461,7 @@ prob_post <- pi$sample_posterior(
 barplot(prob_post, xlab = "Candidate", ylab= "Posterior probability of winning",  cex.names=.7)
 ```
 
-## ...
+##
 
 ```{r}
 #| echo: false
@@ -473,7 +474,7 @@ prob_post <- pi$sample_posterior(
 barplot(prob_post, xlab = "Candidate", ylab= "Posterior probability of winning",  cex.names=.7)
 ```
 
-## ...
+##
 
 ```{r}
 #| echo: false
@@ -494,3 +495,12 @@ library(ggplot2)
 ps_post <- read.csv("wakehurst_audit.csv")
 ggplot(ps_post) + geom_line(aes(color=Candidate, x=Observations, y=Posterior)) + xlim(0, 2000)
 ```
+
+# Questions
+
+## References {.smaller}
+
+- [Quarto](https://doi.org/10.5281/zenodo.5960048). Allaire, J. J., Charles Teague, Carlos Scheidegger, Yihui Xie, and Christophe Dervieux. 2022.
+- [A Bayesian Method for Auditing Elections](https://www.usenix.org/system/files/conference/evtwote12/rivest_bayes_rev_073112.pdf). Emily Shen, and Ronald L. Rivest. 2012.
+- [Auditing Ranked Voting Elections with Dirichlet-Tree Models: First Steps](https://doi.org/10.15157/diss/021). Floyd Everest, Michelle Blom, Philip B. Stark, Peter J. Stuckey, Vanessa Teague, and Damjan Vukcevic. 2022.
+- Ballot-Polling Audits of Instant-Runoff Voting Elections with a Dirichlet-Tree Model. Floyd Everest, Michelle Blom, Philip B. Stark, Peter J. Stuckey, Vanessa Teague, and Damjan Vukcevic. Computer Security. ESORICS 2022 International Workshops.

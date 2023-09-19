@@ -402,25 +402,29 @@ Floyd Everest
 </div>
 
 </section>
-<section id="elections" class="slide level2">
-<h2>Elections</h2>
-<div class="fragment">
+<section id="acknowledgements" class="title-slide slide level1 center">
+<h1>Acknowledgements</h1>
+
+</section>
+
+<section>
+<section id="election-auditing" class="title-slide slide level1 center">
+<h1>Election Auditing</h1>
+
+</section>
+<section id="two-steps" class="slide level2">
+<h2>Two steps</h2>
 <ul>
 <li>Data collection
 <ul>
 <li>Voters submit <strong>ballots</strong> <span class="math inline">\(\{b_i\}_{i=1}^N\)</span></li>
 </ul></li>
-</ul>
-</div>
-<div class="fragment">
-<ul>
 <li><em>“Social choice”</em>
 <ul>
 <li>Choose the winner(s) among <strong>candidates</strong> <span class="math inline">\(\mathcal{C}\)</span></li>
 <li>Deterministic given <span class="math inline">\(\{b_i\}\)</span></li>
 </ul></li>
 </ul>
-</div>
 </section>
 <section id="auditing" class="slide level2">
 <h2>Auditing</h2>
@@ -507,11 +511,11 @@ Floyd Everest
 <ul>
 <li class="fragment"><strong>Efficient</strong>
 <ul>
-<li class="fragment">Outcome supported <span class="math inline">\(\rightarrow\)</span> stop early!</li>
+<li class="fragment">Outcome supported <span class="math inline">\(\rightarrow\)</span> stop early w.h.p!</li>
 </ul></li>
 <li class="fragment"><strong>Low Risk</strong>
 <ul>
-<li class="fragment">Outcome not supported <span class="math inline">\(\rightarrow\)</span> proceed to full recount!</li>
+<li class="fragment">Outcome incorrect <span class="math inline">\(\rightarrow\)</span> proceed to full recount w.h.p!</li>
 </ul></li>
 </ul></li>
 </ul>
@@ -546,7 +550,7 @@ Floyd Everest
 <li>Sample ballots at random
 <ul>
 <li>Compute test statistic(s) at each step</li>
-<li>Stop <em>iff</em> we can reject the possibility of an <strong>upset</strong></li>
+<li>Stop when/if the statistic passes some threshold</li>
 </ul></li>
 </ul>
 <aside class="notes">
@@ -619,33 +623,33 @@ Floyd Everest
 <li class="fragment">In many cases, <span class="math inline">\(\text{H}_0\)</span> is <em>composite</em></li>
 </ul></li>
 <li class="fragment"><span class="math inline">\(\text{H}_1\)</span>: The reported outcome is true</li>
-<li class="fragment">If we can reject <span class="math inline">\(\text{H}_0\)</span>, the data supports the reported outcome</li>
 </ul></li>
-<li class="fragment">Sampling
+<li class="fragment">Procedure
 <ul>
 <li class="fragment">Model <span class="math inline">\(\{b_i\}\)</span> as realisations from IID <span class="math inline">\(\{B_i\}\)</span></li>
+<li class="fragment">Compute statistic based on the random sample seen so far</li>
 </ul></li>
 </ul>
 </div>
 </section>
-<section id="sampling-error" class="slide level2">
-<h2>Sampling error</h2>
+<section id="sample-proportions" class="slide level2">
+<h2>Sample proportions</h2>
 
 <img data-src="index_files/figure-revealjs/unnamed-chunk-4-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-3" width="960" class="r-stretch quarto-figure-center"></section>
-<section id="sampling-error-1" class="slide level2">
-<h2>Sampling error</h2>
+<section id="sample-proportions-1" class="slide level2">
+<h2>Sample proportions</h2>
 
 <img data-src="index_files/figure-revealjs/unnamed-chunk-5-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-4" width="960" class="r-stretch quarto-figure-center"></section>
-<section id="sampling-error-2" class="slide level2">
-<h2>Sampling error</h2>
+<section id="sample-proportions-2" class="slide level2">
+<h2>Sample proportions</h2>
 
 <img data-src="index_files/figure-revealjs/unnamed-chunk-6-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-5" width="960" class="r-stretch quarto-figure-center"></section>
-<section id="sampling-error-3" class="slide level2">
-<h2>Sampling error</h2>
+<section id="sample-proportions-3" class="slide level2">
+<h2>Sample proportions</h2>
 
 <img data-src="index_files/figure-revealjs/unnamed-chunk-7-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-6" width="960" class="r-stretch quarto-figure-center"></section>
-<section id="sampling-error-4" class="slide level2">
-<h2>Sampling error</h2>
+<section id="sample-proportions-4" class="slide level2">
+<h2>Sample proportions</h2>
 
 <img data-src="index_files/figure-revealjs/unnamed-chunk-8-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-7" width="960" class="r-stretch quarto-figure-center"></section>
 <section id="bayesian-audits" class="slide level2">
@@ -717,7 +721,7 @@ Floyd Everest
 <li>Can estimate for some contests by studying worst-case scenarios</li>
 </ul></li>
 </ul>
-</section>
+</section></section>
 <section>
 <section id="example-in-r-wakehurst-2023" class="title-slide slide level1 center">
 <h1>Example in <code>R</code>: Wakehurst 2023</h1>
@@ -828,21 +832,35 @@ Floyd Everest
 
 <img data-src="index_files/figure-revealjs/unnamed-chunk-17-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-13" width="960" class="r-stretch quarto-figure-center"></section>
 <section id="section-1" class="slide level2">
-<h2>…</h2>
+<h2></h2>
 
 <img data-src="index_files/figure-revealjs/unnamed-chunk-18-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-14" width="960" class="r-stretch quarto-figure-center"></section>
 <section id="section-2" class="slide level2">
-<h2>…</h2>
+<h2></h2>
 
 <img data-src="index_files/figure-revealjs/unnamed-chunk-19-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-15" width="960" class="r-stretch quarto-figure-center"></section>
 <section id="section-3" class="slide level2">
-<h2>…</h2>
+<h2></h2>
 
 <img data-src="index_files/figure-revealjs/unnamed-chunk-20-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-16" width="960" class="r-stretch quarto-figure-center"></section>
 <section id="tracing-the-probabilities-over-time" class="slide level2">
 <h2>Tracing the probabilities over time</h2>
 
-<img data-src="index_files/figure-revealjs/unnamed-chunk-21-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-17" width="960" class="r-stretch quarto-figure-center"><div class="footer footer-default">
+<img data-src="index_files/figure-revealjs/unnamed-chunk-21-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-17" width="960" class="r-stretch quarto-figure-center"></section></section>
+<section>
+<section id="questions" class="title-slide slide level1 center">
+<h1>Questions</h1>
+
+</section>
+<section id="references" class="slide level2 smaller">
+<h2>References</h2>
+<ul>
+<li><a href="https://doi.org/10.5281/zenodo.5960048">Quarto</a>. Allaire, J. J., Charles Teague, Carlos Scheidegger, Yihui Xie, and Christophe Dervieux. 2022.</li>
+<li><a href="https://www.usenix.org/system/files/conference/evtwote12/rivest_bayes_rev_073112.pdf">A Bayesian Method for Auditing Elections</a>. Emily Shen, and Ronald L. Rivest. 2012.</li>
+<li><a href="https://doi.org/10.15157/diss/021">Auditing Ranked Voting Elections with Dirichlet-Tree Models: First Steps</a>. Floyd Everest, Michelle Blom, Philip B. Stark, Peter J. Stuckey, Vanessa Teague, and Damjan Vukcevic. 2022.</li>
+<li>Ballot-Polling Audits of Instant-Runoff Voting Elections with a Dirichlet-Tree Model. Floyd Everest, Michelle Blom, Philip B. Stark, Peter J. Stuckey, Vanessa Teague, and Damjan Vukcevic. Computer Security. ESORICS 2022 International Workshops.</li>
+</ul>
+<div class="footer footer-default">
 
 </div>
 </section></section>
